@@ -1,19 +1,30 @@
 import { useState } from "react";
-import { sendLineNotify } from "./api/api";
 
-export default function LineNotifyForm() {
+export default function Home() {
   const [message, setMessage] = useState("");
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    sendLineNotify({ message });
-    console.log({ message });
-    setMessage("");
-  }
+
+    const res = await fetch(`/api/api`, {
+      method: "POST",
+      body: JSON.stringify({ message }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      console.log(res);
+    } else {
+      setMessage("");
+      alert("Message sent successfully!");
+    }
+  };
 
   return (
     <>
-      <h1>nextjs-ts-line-notify</h1>
+      <h1>nextjs-ts-axios-line-notify</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="message">Message:</label>
         <input
